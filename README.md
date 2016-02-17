@@ -1,7 +1,4 @@
-# 標題 #
-
-QRCodeTools for iOS with Objective-C
-
+# QRCodeTools for iOS with Objective-C #
 
 ### 說明 ###
 
