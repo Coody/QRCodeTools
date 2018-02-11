@@ -51,6 +51,12 @@
  * @brief   - 建立 QRCode 掃描 View;
  */
 -(UIView *)createViewWithScanQRCode;
+
+/**
+ * @brief   - 建立 QRCode 掃描的 View 並且使用客製化 frame（非全螢幕）
+ */
+-(UIView *)createViewWithScanQRCodeWithFrame:(CGRect)frame;
+
 /**
  * @brief   - 啟動掃描
  */
@@ -61,4 +67,11 @@
  * @brief   - 讀取 Image 的 QRCode
  */
 -(void)createReadQRCodeWithImage:(UIImage *)tempImage;
+
+#pragma mark : 3. 從字串產生 QRCode Image
+/**
+ * @brief   - 從字串產生 QRCode Image
+ */
++(UIImage *)createQRForString:(NSString *)qrString;
+
 @end

@@ -40,12 +40,15 @@
 
 #pragma mark : 1. 裝置掃描 QRCode
 -(UIView *)createViewWithScanQRCode{
-    
+    [self createViewWithScanQRCodeWithFrame:[UIScreen mainScreen].bounds];
+}
+
+-(UIView *)createViewWithScanQRCodeWithFrame:(CGRect)frame{
     if ( _mainView == nil ) {
         // Do any additional setup after loading the view.
         
-        CGSize windowSize = [UIScreen mainScreen].bounds.size;
-        _mainView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        CGSize windowSize = CGSizeMake(frame.size.width, frame.size.height);
+        _mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, windowSize.width, windowSize.height)];
         
         CGSize scanSize = CGSizeMake(windowSize.width*3/4,
                                      windowSize.width*3/4);
@@ -75,14 +78,12 @@
         
         _preview = [AVCaptureVideoPreviewLayer layerWithSession:_session];
         _preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        _preview.frame = [UIScreen mainScreen].bounds;
+        _preview.frame = _mainView.frame;
         [_mainView.layer insertSublayer:_preview atIndex:0];
         
         [_mainView addSubview:_scanRectView];
         _scanRectView.frame = CGRectMake(0, 0, scanSize.width, scanSize.height);
-        _scanRectView.center = CGPointMake(CGRectGetMidX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds));
-        
-        
+        _scanRectView.center = CGPointMake(CGRectGetMidX(_mainView.frame), CGRectGetMidY(_mainView.frame));
     }
     return _mainView;
 }
@@ -142,6 +143,26 @@
         [_delegate getResultSuccessWithMsg:metadataObject.stringValue];
         
     }
+}
+
+
+#pragma mark : 3. 依照字串產生 QRCode
++(UIImage *)createQRForString:(NSString *)qrString{
+    NSData *stringData = [qrString dataUsingEncoding:NSISOLatin1StringEncoding];
+    
+    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [qrFilter setValue:stringData forKey:@"inputMessage"];
+    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+    
+    CIImage *qrImage = qrFilter.outputImage;
+    float scaleX = [UIScreen mainScreen].bounds.size.width / qrImage.extent.size.width;
+    
+    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleX)];
+    
+    UIImage *qrcodeImage = [[UIImage alloc] initWithCIImage:qrImage 
+                                                      scale:[UIScreen mainScreen].scale
+                                                orientation:UIImageOrientationUp];
+    return qrcodeImage;
 }
 
 #pragma mark : for 
