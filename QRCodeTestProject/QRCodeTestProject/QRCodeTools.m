@@ -40,7 +40,7 @@
 
 #pragma mark : 1. 裝置掃描 QRCode
 -(UIView *)createViewWithScanQRCode{
-    [self createViewWithScanQRCodeWithFrame:[UIScreen mainScreen].bounds];
+    return [self createViewWithScanQRCodeWithFrame:[UIScreen mainScreen].bounds];
 }
 
 -(UIView *)createViewWithScanQRCodeWithFrame:(CGRect)frame{
