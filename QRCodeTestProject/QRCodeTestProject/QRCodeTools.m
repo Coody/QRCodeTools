@@ -11,6 +11,8 @@
 // for AVCapture
 #import <AVFoundation/AVFoundation.h>
 
+static NSString *const kQRCodeTools_Quality = @"M";
+
 @interface QRCodeTools() < AVCaptureMetadataOutputObjectsDelegate >
 @property (nonatomic, weak) id <QRCodeToolsProtocol> delegate;
 
@@ -147,12 +149,17 @@
 
 
 #pragma mark : 3. 依照字串產生 QRCode
-+(UIImage *)createQRForString:(NSString *)qrString{
++(UIImage *)createQRForString:(NSString *)qrString withQuality:(NSString *)quality{
+    if( ![quality isEqualToString:@"H"] &&
+        ![quality isEqualToString:@"M"] &&
+        ![quality isEqualToString:@"L"] ){
+        quality = kQRCodeTools_Quality;
+    }
     NSData *stringData = [qrString dataUsingEncoding:NSISOLatin1StringEncoding];
     
     CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
     [qrFilter setValue:stringData forKey:@"inputMessage"];
-    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+    [qrFilter setValue:quality forKey:@"inputCorrectionLevel"];
     
     CIImage *qrImage = qrFilter.outputImage;
     float scaleX = [UIScreen mainScreen].bounds.size.width / qrImage.extent.size.width;
@@ -163,6 +170,10 @@
                                                       scale:[UIScreen mainScreen].scale
                                                 orientation:UIImageOrientationUp];
     return qrcodeImage;
+}
+
++(UIImage *)createQRForString:(NSString *)qrString{
+    return [QRCodeTools createQRForString:qrString withQuality:kQRCodeTools_Quality];
 }
 
 #pragma mark : for 

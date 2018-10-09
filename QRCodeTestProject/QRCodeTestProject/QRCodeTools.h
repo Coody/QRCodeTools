@@ -38,9 +38,9 @@
 
 /** 
  * @brief  - Camera 掃描 QRCode 的時候的框框細節設置
- * @params - tempBorderColor : 邊框顏色
- * @params - tempBorderWidth : 邊框粗細
- * @params - temopCornerRadius : 邊框角角的圓弧角度
+ * @params tempBorderColor : 邊框顏色
+ * @params tempBorderWidth : 邊框粗細
+ * @params tempCornerRadius : 邊框角角的圓弧角度
  */
 -(void)setScanRectWithBorderColor:(UIColor *)tempBorderColor
                   withBorderWidth:(CGFloat)tempBorderWidth
@@ -73,5 +73,6 @@
  * @brief   - 從字串產生 QRCode Image
  */
 +(UIImage *)createQRForString:(NSString *)qrString;
++(UIImage *)createQRForString:(NSString *)qrString withQuality:(NSString *)quality;
 
 @end
